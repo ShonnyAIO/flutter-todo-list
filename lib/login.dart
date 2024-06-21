@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/const/colors.dart';
 
 class Login_Screen extends StatefulWidget {
-  final VoidCallbackAction show;
+  final VoidCallback show;
   Login_Screen(this.show, {super.key});
 
   @override
@@ -66,7 +66,7 @@ class _Login_ScreenState extends State<Login_Screen> {
           ),
           SizedBox(width: 5),
           GestureDetector(
-            onTap: () => {widget.show},
+            onTap: () => {widget.show()},
             child: Text(
               "Sign Up",
               style: TextStyle(
