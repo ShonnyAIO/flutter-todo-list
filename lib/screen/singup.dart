@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/const/colors.dart';
+import 'package:todo_list/data/auth_data.dart';
 
-class Login_Screen extends StatefulWidget {
+class Signup_Screen extends StatefulWidget {
   final VoidCallback show;
-  Login_Screen(this.show, {super.key});
+  Signup_Screen(this.show, {super.key});
 
   @override
-  State<Login_Screen> createState() => _Login_ScreenState();
+  State<Signup_Screen> createState() => _Signup_ScreenState();
 }
 
-class _Login_ScreenState extends State<Login_Screen> {
+class _Signup_ScreenState extends State<Signup_Screen> {
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
+  FocusNode _focusNode3 = FocusNode();
 
   final email = TextEditingController();
   final password = TextEditingController();
+  final passwordConfirm = TextEditingController();
 
   @override
   void initState() {
@@ -25,6 +28,11 @@ class _Login_ScreenState extends State<Login_Screen> {
 
     super.initState();
     _focusNode2.addListener(() {
+      setState(() {});
+    });
+
+    super.initState();
+    _focusNode3.addListener(() {
       setState(() {});
     });
   }
@@ -43,10 +51,13 @@ class _Login_ScreenState extends State<Login_Screen> {
               textfield(email, _focusNode1, 'Email', Icons.email),
               SizedBox(height: 10),
               textfield(password, _focusNode2, 'Password', Icons.lock),
+              SizedBox(height: 10),
+              textfield(
+                  passwordConfirm, _focusNode3, 'Repeat Password', Icons.lock),
               SizedBox(height: 8),
               account(),
               SizedBox(height: 20),
-              Login_bottom(),
+              SignUp_bottom(),
             ],
           ),
         ),
@@ -61,14 +72,14 @@ class _Login_ScreenState extends State<Login_Screen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            "Don't have an account",
+            "Don you have an account",
             style: TextStyle(color: Colors.grey[700], fontSize: 14),
           ),
           SizedBox(width: 5),
           GestureDetector(
             onTap: () => {widget.show()},
             child: Text(
-              "Sign Up",
+              "Login",
               style: TextStyle(
                   color: Colors.blue,
                   fontSize: 14,
@@ -80,23 +91,31 @@ class _Login_ScreenState extends State<Login_Screen> {
     );
   }
 
-  Widget Login_bottom() {
+  Widget SignUp_bottom() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          color: custom_green,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text('Login',
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: GestureDetector(
+        onTap: () {
+          AuthenticationRemote()
+              .register(email.text, password.text, passwordConfirm.text);
+        },
+        child: Container(
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+            color: custom_green,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            'Sign Up',
             style: TextStyle(
               color: Colors.white,
               fontSize: 25,
               fontWeight: FontWeight.bold,
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -109,7 +128,9 @@ class _Login_ScreenState extends State<Login_Screen> {
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(15)),
         child: TextField(
-          obscureText: typeName == 'Password' ? true : false,
+          obscureText: typeName == 'Password' || typeName == 'Repeat Password'
+              ? true
+              : false,
           controller: _controller,
           focusNode: _focusNode,
           style: TextStyle(fontSize: 18, color: Colors.black),

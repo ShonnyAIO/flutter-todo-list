@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/const/colors.dart';
+import 'package:todo_list/data/auth_data.dart';
 
-class Signup_Screen extends StatefulWidget {
+class Login_Screen extends StatefulWidget {
   final VoidCallback show;
-  Signup_Screen(this.show, {super.key});
+  Login_Screen(this.show, {super.key});
 
   @override
-  State<Signup_Screen> createState() => _Signup_ScreenState();
+  State<Login_Screen> createState() => _Login_ScreenState();
 }
 
-class _Signup_ScreenState extends State<Signup_Screen> {
+class _Login_ScreenState extends State<Login_Screen> {
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
-  FocusNode _focusNode3 = FocusNode();
 
   final email = TextEditingController();
   final password = TextEditingController();
-  final passwordConfirm = TextEditingController();
 
   @override
   void initState() {
@@ -27,11 +26,6 @@ class _Signup_ScreenState extends State<Signup_Screen> {
 
     super.initState();
     _focusNode2.addListener(() {
-      setState(() {});
-    });
-
-    super.initState();
-    _focusNode3.addListener(() {
       setState(() {});
     });
   }
@@ -50,13 +44,10 @@ class _Signup_ScreenState extends State<Signup_Screen> {
               textfield(email, _focusNode1, 'Email', Icons.email),
               SizedBox(height: 10),
               textfield(password, _focusNode2, 'Password', Icons.lock),
-              SizedBox(height: 10),
-              textfield(
-                  passwordConfirm, _focusNode3, 'Repeat Password', Icons.lock),
               SizedBox(height: 8),
               account(),
               SizedBox(height: 20),
-              SignUp_bottom(),
+              Login_bottom(),
             ],
           ),
         ),
@@ -71,14 +62,14 @@ class _Signup_ScreenState extends State<Signup_Screen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            "Don you have an account",
+            "Don't have an account",
             style: TextStyle(color: Colors.grey[700], fontSize: 14),
           ),
           SizedBox(width: 5),
           GestureDetector(
             onTap: () => {widget.show()},
             child: Text(
-              "Login",
+              "Sign Up",
               style: TextStyle(
                   color: Colors.blue,
                   fontSize: 14,
@@ -90,23 +81,30 @@ class _Signup_ScreenState extends State<Signup_Screen> {
     );
   }
 
-  Widget SignUp_bottom() {
+  Widget Login_bottom() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          color: custom_green,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text('SignUp',
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: GestureDetector(
+        onTap: () {
+          AuthenticationRemote().login(email.text, password.text);
+        },
+        child: Container(
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+            color: custom_green,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            'Login',
             style: TextStyle(
               color: Colors.white,
               fontSize: 25,
               fontWeight: FontWeight.bold,
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
