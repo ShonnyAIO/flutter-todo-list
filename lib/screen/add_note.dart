@@ -134,7 +134,7 @@ class _Add_creenState extends State<Add_screen> {
     );
   }
 
-  Widget subtitle_text() {
+  Padding subtitle_text() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(

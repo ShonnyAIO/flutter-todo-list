@@ -45,22 +45,76 @@ class Firestore_Datasource {
 
   List getNotes(AsyncSnapshot snapshot) {
     try {
-      final notesList = snapshot.data.docs.map((doc) {
+      final notesList = snapshot.data!.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        return Note(data['id'], data['subtitle'], data['time'], data['image'],
-            data['title']);
+        return Note(data['id'], data['subtitle'], data['title'],
+            data['time'].toString(), data['image'], data['isDon']);
       }).toList();
       return notesList;
     } catch (e) {
+      print('ERROR $e');
       return [];
     }
   }
 
-  Stream<QuerySnapshot> stream() {
+  Stream<QuerySnapshot> stream(bool done) {
     return _firestore
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .collection('notes')
+        .where('isDon', isEqualTo: done)
         .snapshots();
+  }
+
+  Future<bool> isdone(String uuid, bool isDon) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .update({'isDon': isDon});
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
+  }
+
+  Future<bool> Update_Note(
+      String uuid, int image, String title, String subtitle) async {
+    try {
+      DateTime data = new DateTime.now();
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .update({
+        'time': '${data.hour}:${data.minute}',
+        'subtitle': subtitle,
+        'title': title,
+        'image': image,
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
+  }
+
+  Future<bool> delet_note(String uuid) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
   }
 }

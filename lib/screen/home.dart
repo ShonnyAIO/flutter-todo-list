@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:todo_list/const/colors.dart';
-import 'package:todo_list/data/firestor.dart';
 import 'package:todo_list/screen/add_note.dart';
-import 'package:todo_list/widgets/task_widgets.dart';
+import 'package:todo_list/widgets/stream_note.dart';
 
 class Home_Screen extends StatefulWidget {
   const Home_Screen({super.key});
@@ -47,21 +45,18 @@ class _Home_ScreenState extends State<Home_Screen> {
             }
             return true;
           },
-          child: StreamBuilder<QuerySnapshot>(
-            stream: Firestore_Datasource().stream(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return CircularProgressIndicator();
-              }
-              final noteslist = Firestore_Datasource().getNotes(snapshot);
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final note = noteslist[index];
-                  return Task_Widget(note);
-                },
-                itemCount: noteslist.length,
-              );
-            },
+          child: Column(
+            children: [
+              Stream_note(false),
+              Text(
+                'isDone',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade500,
+                    fontWeight: FontWeight.bold),
+              ),
+              Stream_note(true)
+            ],
           ),
         ),
       ),

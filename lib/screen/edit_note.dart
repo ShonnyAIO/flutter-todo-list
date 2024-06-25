@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import "package:todo_list/const/colors.dart";
+import 'package:todo_list/data/firestor.dart';
+import 'package:todo_list/model/notes.dart';
 
 class Edit_Screen extends StatefulWidget {
-  const Edit_Screen({super.key});
+  Note _note;
+  Edit_Screen(this._note, {super.key});
 
   @override
   State<Edit_Screen> createState() => _Edit_ScreenState();
 }
 
 class _Edit_ScreenState extends State<Edit_Screen> {
-  final title = TextEditingController();
-  final subtitle = TextEditingController();
+  TextEditingController? title;
+  TextEditingController? subtitle;
 
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
 
   @override
+  void initState() {
+    super.initState();
+    title = TextEditingController(text: widget._note.title);
+    subtitle = TextEditingController(text: widget._note.subtitle);
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColors,
@@ -47,11 +57,14 @@ class _Edit_ScreenState extends State<Edit_Screen> {
             minimumSize: Size(170, 48),
           ),
           onPressed: () {
+            Firestore_Datasource().Update_Note(widget._note.id,
+                widget._note.image, widget._note.title, widget._note.subtitle);
             Navigator.pop(context);
           },
-          child: Text('Add task',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          child: Text(
+            'Add task',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -61,9 +74,10 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Cancel',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );

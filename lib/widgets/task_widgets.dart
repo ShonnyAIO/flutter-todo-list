@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/const/colors.dart';
+import 'package:todo_list/data/firestor.dart';
 import 'package:todo_list/model/notes.dart';
 import 'package:todo_list/screen/edit_note.dart';
 
@@ -64,11 +65,12 @@ class _Task_WidgetState extends State<Task_Widget> {
                             setState(() {
                               isDone = !isDone;
                             });
+                            Firestore_Datasource()
+                                .isdone(widget._note.id, isDone);
                           },
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
                     Text(
                       widget._note.subtitle,
                       style: TextStyle(
@@ -76,7 +78,7 @@ class _Task_WidgetState extends State<Task_Widget> {
                           fontWeight: FontWeight.w400,
                           color: Colors.grey.shade400),
                     ),
-                    Spacer(),
+                    SizedBox(height: 5),
                     edit_time()
                   ],
                 ),
@@ -101,7 +103,7 @@ class _Task_WidgetState extends State<Task_Widget> {
               borderRadius: BorderRadius.circular(18),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               child: Row(
                 children: [
                   Image.asset('images/icon_time.png'),
@@ -122,7 +124,7 @@ class _Task_WidgetState extends State<Task_Widget> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Edit_Screen(),
+                  builder: (context) => Edit_Screen(widget._note),
                 ),
               );
             },
